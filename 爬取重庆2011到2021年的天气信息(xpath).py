@@ -3,6 +3,7 @@ from lxml import etree
 from bs4 import BeautifulSoup
 from time import sleep
 import random
+import matplotlib.pyplot as plt
 
 # 拼接日期列表
 years = [i for i in range(2011, 2022)]
@@ -60,4 +61,28 @@ for year in years:
     weather[str(year)] = each_year
     print('爬取第{}年天气数据成功！！！'.format(year))
 f.close()
+print('爬取成功！！')
 
+
+def get_all_t(weather, which):
+    temperature = []
+    for year in weather.keys():
+        for month in weather[year].keys():
+            temperature.extend(weather[year][month][which])
+    return temperature
+
+
+print('开始绘制温度变化曲线图：###########################################')
+max_t = get_all_t(weather, 'max')
+min_t = get_all_t(weather, 'min')
+
+x = [i for i in range(len(max_t))]
+plt.figure()
+plt.plot(x, max_t, label='max temperature')  # Plot some data on the (implicit) axes.
+plt.plot(x, min_t, label='min temperature')  # etc.
+plt.xlabel('number/day')
+plt.ylabel('temperature/℃')
+plt.title("The weather change curve of Chongqing in recent 20 years")
+plt.legend();
+plt.show()
+print('绘制成功！')
